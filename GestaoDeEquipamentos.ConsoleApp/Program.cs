@@ -1,4 +1,5 @@
-﻿using GestaoDeEquipamentos.ConsoleApp.Domínio;
+﻿using GestaoDeEquipamentos.ConsoleApp.Apresentacao;
+using GestaoDeEquipamentos.ConsoleApp.Domínio;
 
 int contadorIdsEquipamentos = 1;
 Equipamento[] equipamentosSalvos = new Equipamento[100];
@@ -15,18 +16,12 @@ equipamentoTeste.dataFabricacao = DateTime.Parse("02/02/2020");
 
 equipamentosSalvos[0] = equipamentoTeste;
 
+TelaPrincipal telaPrincipal = new TelaPrincipal();
+
 while (true)
 {
-    Console.Clear();
-    Console.WriteLine("---------------------------------");
-    Console.WriteLine("Gestao de Equipamentos");
-    Console.WriteLine("---------------------------------");
-    Console.WriteLine("1 - Gestao de Equipamentos");
-    Console.WriteLine("2 - Controle de Chamados");
-    Console.WriteLine("S - Sair");
-    Console.WriteLine("---------------------------------");
-    Console.Write("> ");
-    string? opcaoMenuPrincipal = Console.ReadLine()?.ToUpper();
+    string? opcaoMenuPrincipal = telaPrincipal.ObterOpcaoMenuPrincipal();
+
 
     if (opcaoMenuPrincipal == "S")
     {
@@ -350,7 +345,11 @@ while (true)
 
                     Console.WriteLine(
                     "{0, -7} | {1, -15} | {2, -30} | {3, -17} | {4, -15}",
-                        ch.id, ch.titulo, ch.descricao, ch.dataAbertura, ch.equipamento.nome
+                        ch.id,
+                        ch.titulo,
+                        ch.descricao,
+                        ch.dataAbertura,
+                        ch.equipamento.nome
                     );
                 }
                 Console.WriteLine("---------------------------------");
@@ -400,6 +399,7 @@ while (true)
                     Chamado ch = chamadosSalvos[i];
                     if (ch == null)
                         continue;
+
                     Console.WriteLine(
                     "{0, -7} | {1, -15} | {2, -30} | {3, -17} | {4, -15}",
                    ch.id, ch.titulo, ch.descricao, ch.dataAbertura, ch.equipamento.nome
