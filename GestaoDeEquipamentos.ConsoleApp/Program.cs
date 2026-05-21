@@ -1,11 +1,18 @@
 ﻿using GestaoDeEquipamentos.ConsoleApp.Apresentacao;
 using GestaoDeEquipamentos.ConsoleApp.Domínio;
+using GestaoDeEquipamentos.ConsoleApp.Infraestrutura;
 
-int contadosIdsChamados = 1;
-Chamado[] chamadosSalvos = new Chamado[100];
+RepositorioEquipamento repositorioEquipamento = new RepositorioEquipamento();
+RepositorioChamado repositorioChamado = new RepositorioChamado();
 
 TelaPrincipal telaPrincipal = new TelaPrincipal();
+
 TelaEquipamento telaEquipamento = new TelaEquipamento();
+telaEquipamento.repositorioEquipamento = repositorioEquipamento;
+
+telaChamado telaChamado = new telaChamado();
+telaChamado.repositorioChamado = repositorioChamado;
+telaChamado.repositorioEquipamento = repositorioEquipamento;
 
 while (true)
 {
@@ -43,245 +50,24 @@ while (true)
 
         else if (opcaoMenuPrincipal == "2")
         {
-            Console.Clear();
-            Console.WriteLine("---------------------------------");
-            Console.WriteLine("Controle de Chamados");
-            Console.WriteLine("---------------------------------");
-            Console.WriteLine("1 - Cadastrar Chamado");
-            Console.WriteLine("2 - Editar Chamado");
-            Console.WriteLine("3 - Excluir Chamado");
-            Console.WriteLine("4 - Visualizar Chamados");
-            Console.WriteLine("S - Sair");
-            Console.WriteLine("---------------------------------");
-            Console.Write("> ");
-            string? opcaoMenu = Console.ReadLine()?.ToUpper();
-
+            string opcaoMenu = telaChamado.ObterOpcaoMenu();
             if (opcaoMenu == "S")
             {
                 Console.Clear();
                 break;
             }
-
             // Operacoes CRUD - Create, Retrieve, Update, Delete
             if (opcaoMenu == "1")
-            {
-                Console.WriteLine("---------------------------------");
-                Console.WriteLine("Cadastro de Chamado");
-                Console.WriteLine("---------------------------------");
-
-                // Obtencao dos Dados
-                Console.Write("Digite o título do chamado: ");
-                string titulo = Console.ReadLine();
-
-                Console.Write("Digite a descricao do chamado: ");
-                string descricao = Console.ReadLine();
-
-                DateTime dataAbertura = DateTime.Now;
-
-                // Apresentar os equipamentos cadastrados
-
-                Console.WriteLine("---------------------------------");
-
-                //tabela do console
-                Console.WriteLine(
-                    "{0, -7} | {1, -15} | {2, -20} | {3, -15}",
-                    "Id", "Nome", "Preço de Aquisiçao", "Data de Fabricaçao"
-                    );
-
-                for (int i = 0; i < telaEquipamento.equipamentosSalvos.Length; i++)
-                {
-                    Equipamento eq = telaEquipamento.equipamentosSalvos[i];
-
-                    if (eq == null)
-                        continue;
-
-                    Console.WriteLine(
-                        "{0, -7} | {1, -15} | {2, -20} | {3, -15}",
-                        eq.id, eq.nome, eq.precoAquisicao, eq.dataFabricacao
-                    );
-                }
-
-                Console.WriteLine("---------------------------------");
-
-                // Pedir para o usuario selecionar o ID equipamento desejado
-
-                Console.Write("Digite o id do equipamento que deseja selecionar: ");
-                int idEquipamentoSelecionado = Convert.ToInt32(Console.ReadLine());
-
-                Equipamento equipamentoSelecionado = null;
-
-                for (int i = 0; i < telaEquipamento.equipamentosSalvos.Length; i++)
-                {
-                    Equipamento eq = telaEquipamento.equipamentosSalvos[i];
-
-                    if (eq == null)
-                        continue;
-
-                    if (eq.id == idEquipamentoSelecionado)
-                    {
-                        equipamentoSelecionado = eq;
-                        break;
-                    }
-                }
-
-                Chamado novoChamado = new Chamado();
-                novoChamado.id = contadosIdsChamados++;
-                novoChamado.titulo = titulo;
-                novoChamado.descricao = descricao;
-                novoChamado.dataAbertura = dataAbertura;
-                novoChamado.equipamento = equipamentoSelecionado;
-
-                for (int i = 0; i < chamadosSalvos.Length; i++)
-                {
-                    if (chamadosSalvos[i] == null)
-                    {
-                        chamadosSalvos[i] = novoChamado;
-                        break;
-                    }
-                }
-
-                Console.WriteLine($"O chamado {novoChamado.titulo} foi cadastrado com sucesso!");
-                Console.ReadLine();
-            }
+                telaChamado.Cadastrar();
 
             else if (opcaoMenu == "2")
-            {
-                Console.WriteLine("---------------------------------");
-                Console.WriteLine("Ediçao de Chamado");
-                Console.WriteLine("---------------------------------");
-
-                Console.WriteLine(
-                    "{0, -7} | {1, -15} | {2, -30} | {3, -17} | {4, -15}",
-                    "Id", "Título", "Descriçao", "Data de Abertura", "Equipamento"
-                );
-
-                for (int i = 0; i < chamadosSalvos.Length; i++)
-                {
-                    Chamado ch = chamadosSalvos[i];
-
-                    if (ch == null)
-                        continue;
-
-                    Console.WriteLine(
-                    "{0, -7} | {1, -15} | {2, -30} | {3, -17} | {4, -15}",
-                        ch.id,
-                        ch.titulo,
-                        ch.descricao,
-                        ch.dataAbertura,
-                        ch.equipamento.nome
-                    );
-                }
-                Console.WriteLine("---------------------------------");
-                Console.Write("Digite o id do chamado que deseja editar: ");
-                int idSelecionado = Convert.ToInt32(Console.ReadLine());
-
-                Console.Write("digite o título do chamado: ");
-                string titulo = Console.ReadLine();
-
-                Console.Write("Digite a descricao do chamado: ");
-                string descricao = Console.ReadLine();
-
-                Console.Write("Digite a nova data de abertura: ");
-                DateTime dataAbertura = DateTime.Parse(Console.ReadLine());
-
-                for (int i = 0; i < chamadosSalvos.Length; i++)
-                {
-                    Chamado chamadoSelecionado = chamadosSalvos[i];
-
-                    if (chamadoSelecionado == null)
-                        continue;
-                    if (chamadoSelecionado.id == idSelecionado)
-                    {
-                        chamadoSelecionado.titulo = titulo;
-                        chamadoSelecionado.descricao = descricao;
-                        chamadoSelecionado.dataAbertura = dataAbertura;
-                        break;
-                    }
-                }
-                Console.WriteLine($"o Chamado {titulo} foi editado com sucesso!");
-                Console.ReadLine();
-            }
+                telaChamado.Editar();
 
             else if (opcaoMenu == "3")
-            {
-                Console.WriteLine("---------------------------------");
-                Console.WriteLine("Exclusao de Chamados");
-                Console.WriteLine("---------------------------------");
-
-                Console.WriteLine(
-                    "{0, -7} | {1, -15} | {2, -30} | {3, -17} | {4, -15}",
-                    "Id", "Título", "Descriçao", "Data de Abertura", "Equipamento"
-                );
-
-                for (int i = 0; i < chamadosSalvos.Length; i++)
-                {
-                    Chamado ch = chamadosSalvos[i];
-                    if (ch == null)
-                        continue;
-
-                    Console.WriteLine(
-                    "{0, -7} | {1, -15} | {2, -30} | {3, -17} | {4, -15}",
-                   ch.id, ch.titulo, ch.descricao, ch.dataAbertura, ch.equipamento.nome
-                    );
-                }
-
-                Console.WriteLine("---------------------------------");
-                Console.Write("Digite o id do chamado que deseja excluir: ");
-                int idSelecionado = Convert.ToInt32(Console.ReadLine());
-
-                for (int i = 0; i < chamadosSalvos.Length; i++)
-                {
-                    Chamado chamadoSelecionado = chamadosSalvos[i];
-
-                    if (chamadoSelecionado == null)
-                        continue;
-
-                    if (chamadoSelecionado.id == idSelecionado)
-                    {
-                        chamadosSalvos[i] = null;
-                        break;
-                    }
-                }
-                Console.WriteLine($"O chamado foi excluído com sucesso!");
-                Console.ReadLine();
-            }
+                telaChamado.Excluir();
 
             else if (opcaoMenu == "4")
-            {
-                Console.WriteLine("---------------------------------");
-                Console.WriteLine("Visualizacao de Chamados");
-                Console.WriteLine("---------------------------------");
-
-                // Tabela
-                Console.WriteLine(
-                    "{0, -7} | {1, -15} | {2, -30} | {3, -17} | {4, -15}",
-                    "Id", "Título", "Descriçao", "Data de Abertura", "Equipamento"
-                );
-
-                for (int i = 0; i < chamadosSalvos.Length; i++)
-                {
-                    Chamado ch = chamadosSalvos[i];
-
-                    if (ch == null)
-                        continue;
-
-                    Console.WriteLine(
-                        "{0, -7} | {1, -15} | {2, -30} | {3, -17} | {4, -15}",
-                        ch.id,
-                        ch.titulo,
-                        ch.descricao,
-                        ch.dataAbertura.ToShortDateString(),
-                        ch.equipamento.nome
-                    );
-                }
-
-                Console.WriteLine("---------------------------------");
-                Console.Write("Digite ENTER para continuar...");
-                Console.ReadLine();
-            }
-
+                telaChamado.VisualizarTodos();
         }
     }
-
-
 }

@@ -1,0 +1,61 @@
+using GestaoDeEquipamentos.ConsoleApp.Domínio;
+
+namespace GestaoDeEquipamentos.ConsoleApp.Infraestrutura;
+
+public class RepositorioChamado
+{
+    private int contadosIdsChamados = 1;
+    private Chamado[] chamadosSalvos = new Chamado[100];
+
+    public void Cadastrar(Chamado novoChamado)
+    {
+        novoChamado.id = contadosIdsChamados++;
+
+        for (int i = 0; i < chamadosSalvos.Length; i++)
+        {
+            if (chamadosSalvos[i] == null)
+            {
+                chamadosSalvos[i] = novoChamado;
+                break;
+            }
+        }
+    }
+    public void Editar(int idSelecionado, Chamado chamadoAtualizado)
+    {
+        for (int i = 0; i < chamadosSalvos.Length; i++)
+        {
+            Chamado chamadoSelecionado = chamadosSalvos[i];
+
+            if (chamadoSelecionado == null)
+                continue;
+
+            if (chamadoSelecionado.id == idSelecionado)
+            {
+                chamadoSelecionado.titulo = chamadoAtualizado.titulo;
+                chamadoSelecionado.descricao = chamadoAtualizado.descricao;
+                chamadoSelecionado.equipamento = chamadoAtualizado.equipamento;
+                break;
+            }
+        }
+    }
+    public void Excluir(int idSelecionado)
+    {
+        for (int i = 0; i < chamadosSalvos.Length; i++)
+        {
+            Chamado chamadoSelecionado = chamadosSalvos[i];
+
+            if (chamadoSelecionado == null)
+                continue;
+
+            if (chamadoSelecionado.id == idSelecionado)
+            {
+                chamadosSalvos[i] = null;
+                break;
+            }
+        }
+    }
+    public Chamado[] SelecionarTodos()
+    {
+        return chamadosSalvos;
+    }
+}

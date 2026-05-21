@@ -93,6 +93,8 @@ public class TelaEquipamento
 
         repositorioEquipamento.Editar(idSelecionado, equipamentoAtualizado);
 
+
+
         Console.WriteLine($"O equipamento {nome} foi editado com sucesso!");
         Console.ReadLine();
     }
