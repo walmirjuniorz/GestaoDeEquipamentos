@@ -1,5 +1,4 @@
 ﻿using GestaoDeEquipamentos.ConsoleApp.Apresentacao;
-using GestaoDeEquipamentos.ConsoleApp.Domínio;
 using GestaoDeEquipamentos.ConsoleApp.Infraestrutura;
 
 RepositorioEquipamento repositorioEquipamento = new RepositorioEquipamento();
